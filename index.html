@@ -3,141 +3,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini AI Autonomous Agent | Interactive Web Interface</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <title>Gemini Agent — Manroop Singh</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #090d16;
-            --surface: rgba(18, 24, 38, 0.7);
-            --border: rgba(255, 255, 255, 0.08);
-            --text-main: #f8fafc;
-            --accent: #a855f7;
+            --bg: #090a0f;
+            --subtle-bg: #0d0f17;
+            --card-bg: #121520;
+            --card-hover: #161a28;
+            --border-color: #1e2333;
+            --border-hover: #2d344d;
+            --text-title: #f8fafc;
+            --text-body: #94a3b8;
+            --text-subtle: #64748b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent-green: #10b981;
+            --accent-green-glow: rgba(16, 185, 129, 0.15);
+            --danger: #f43f5e;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+        }
         body {
             min-height: 100vh;
-            background: radial-gradient(circle at 50% 0%, #1f0b3b 0%, var(--bg) 75%);
-            color: var(--text-main);
-            padding: 32px 16px;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(99, 102, 241, 0.12), transparent),
+                radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.05), transparent 40%);
+            color: var(--text-body);
+            line-height: 1.5;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 24px 16px 64px;
         }
-        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; height: 90vh; }
-        .nav-back { color: #c084fc; text-decoration: none; font-size: 0.9rem; font-weight: 500; margin-bottom: 16px; display: inline-block; }
-        .hero {
-            background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-            backdrop-filter: blur(20px); padding: 24px; position: relative; overflow: hidden; margin-bottom: 16px;
+        .container {
+            width: 100%;
+            max-width: 980px;
         }
-        .hero::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #a855f7, #3b82f6);
+        header.top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .badge {
-            display: inline-block; padding: 4px 12px; border-radius: 9999px;
-            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-            background: rgba(168, 85, 247, 0.15); color: #d8b4fe; border: 1px solid rgba(168, 85, 247, 0.3);
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-title);
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            transition: opacity 0.2s;
+        }
+        .brand-link:hover { opacity: 0.8; }
+        .brand-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .nav-btn {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-subtle);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover {
+            color: var(--text-title);
+            background: var(--subtle-bg);
+            border-color: var(--border-color);
+        }
+        .app-header {
+            margin-bottom: 32px;
+        }
+        .app-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary);
             margin-bottom: 8px;
+            font-weight: 600;
         }
-        h1 { font-size: 1.8rem; font-weight: 900; margin-bottom: 4px; }
-        p.subtitle { color: #94a3b8; font-size: 0.92rem; }
-
-        .chat-box {
-            flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
-            backdrop-filter: blur(16px); padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
-            margin-bottom: 16px;
+        .app-category::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--primary);
         }
-        .msg {
-            max-width: 80%; padding: 12px 18px; border-radius: 16px; font-size: 0.95rem; line-height: 1.6;
+        h1.app-title {
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-title);
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
-        .msg-user {
-            align-self: flex-end; background: #a855f7; color: #fff; border-bottom-right-radius: 4px;
+        p.app-summary {
+            font-size: 0.98rem;
+            color: var(--text-body);
+            max-width: 680px;
+            line-height: 1.6;
         }
-        .msg-ai {
-            align-self: flex-start; background: rgba(255,255,255,0.06); color: #e2e8f0; border: 1px solid var(--border); border-bottom-left-radius: 4px;
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.2s;
         }
-        .msg-ai strong { color: #c084fc; }
-        .input-row { display: flex; gap: 12px; }
-        .input-row input {
-            flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
-            padding: 14px 18px; color: #fff; font-size: 0.95rem; outline: none;
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
         }
-        .input-row input:focus { border-color: #a855f7; }
-        .btn-send {
-            background: #a855f7; color: #fff; border: none; padding: 0 24px; border-radius: 14px; font-weight: 700;
-            cursor: pointer; transition: all 0.2s;
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .btn-send:hover { background: #9333ea; }
+        .panel-badge {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-subtle);
+            background: var(--subtle-bg);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .btn-secondary {
+            background: var(--subtle-bg);
+            color: var(--text-title);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: var(--card-hover);
+            border-color: var(--border-hover);
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.78rem;
+            border-radius: var(--radius-sm);
+        }
+        .footer {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            color: var(--text-subtle);
+        }
+        .footer a {
+            color: var(--text-body);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer a:hover { color: var(--text-title); }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="https://bhogals-profile.vercel.app/" class="nav-back">← Return to Manroop's Portfolio</a>
+        <header class="top-nav">
+            <a href="https://bhogals-profile.vercel.app/" class="brand-link">
+                <div class="brand-avatar">M</div>
+                <span>Manroop Singh Portfolio</span>
+            </a>
+            <div class="nav-actions">
+                <a href="https://github.com/MANROOP-SINGH-01" target="_blank" class="nav-btn">GitHub</a>
+                <a href="https://bhogals-profile.vercel.app/" class="nav-btn">All Projects</a>
+            </div>
+        </header>
 
-        <div class="hero">
-            <div class="badge">Generative AI • Google Gemini</div>
-            <h1>Gemini Autonomous Agent Console</h1>
-            <p class="subtitle">Multi-turn structured reasoning agent based on <code>gemini_test.py</code> using Google GenAI SDK paradigms.</p>
+        <div class="app-header">
+            <div class="app-category">Generative AI • Google GenAI SDK</div>
+            <h1 class="app-title">Gemini Autonomous Agent</h1>
+            <p class="app-summary">
+                Multi-turn reasoning and tool invocation agent powered by Google Gemini multimodal API structures defined in <code>gemini_test.py</code>.
+            </p>
         </div>
 
-        <div class="chat-box" id="chatBox">
-            <div class="msg msg-ai">
-                Hello! I am Manroop's <strong>Gemini AI Agent</strong>. I can analyze reasoning chains, debug code architectures, synthesize algorithmic solutions, and demonstrate multi-turn tool calling. What would you like to explore today?
+        <div class="panel" style="display: flex; flex-direction: column; height: 540px;">
+            <div class="panel-header">
+                <span class="panel-title">Reasoning Console</span>
+                <span class="panel-badge">gemini-2.5-flash</span>
+            </div>
+            <div id="chatBox" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; padding-right: 6px;">
+                <div style="background: var(--subtle-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; font-size: 0.88rem; line-height: 1.6; color: var(--text-title); align-self: flex-start; max-width: 85%;">
+                    I am Manroop's <strong>Gemini Autonomous Agent</strong>. I operate within a structured thinking budget, processing code architectures, algorithms, and system designs. Enter a prompt below to initiate an interaction.
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="userInput" class="input-text" placeholder="Inquire about architecture, models, or algorithms..." onkeydown="if(event.key==='Enter') send()">
+                <button class="btn-primary" onclick="send()">Submit</button>
             </div>
         </div>
 
-        <div class="input-row">
-            <input type="text" id="userInput" placeholder="Ask Gemini Agent anything..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button class="btn-send" onclick="sendMessage()">Send</button>
-        </div>
+        <footer class="footer">
+            <span>Built by Manroop Singh • Deployed on Vercel</span>
+            <a href="https://github.com/MANROOP-SINGH-01/gemini-ai-agent" target="_blank">View Source Code →</a>
+        </footer>
     </div>
 
     <script>
         const chatBox = document.getElementById('chatBox');
-        const userInput = document.getElementById('userInput');
+        const input = document.getElementById('userInput');
 
-        const knowledgeBase = {
-            "portfolio": "Manroop's portfolio is a 3D desktop rig built with Three.js, Next.js, and custom shaders, featuring 18 deployed projects.",
-            "kavach": "Kavach is an iQOO Hackathon winning mobile scam detection PWA built with React 19 and real-time heuristics.",
-            "openvoice": "OpenVoice is an offline-first dictation tool with an 8-crate Rust workspace and Vite UI that uses faster-whisper.",
-            "diabetes": "The Diabetes Prediction project uses a Support Vector Machine (Linear SVC) trained on 768 patient samples from the Pima Indians dataset.",
-            "gold": "The Gold Price Prediction model utilizes Random Forest Regression on multi-decade GLD, SPX, and SLV data."
+        const repoDocs = {
+            "portfolio": "Manroop's portfolio is a 3D Three.js experience with custom shaders, keyboard soundboards, and 18 deployed projects.",
+            "kavach": "Kavach is an iQOO Hackathon winning mobile scam defense PWA built with React 19 and Vite.",
+            "openvoice": "OpenVoice is an offline-first dictation tool featuring an 8-crate Rust workspace and Vite frontend.",
+            "diabetes": "The Diabetes Prediction project utilizes a Support Vector Machine (Linear SVC) trained on 768 patient samples.",
+            "gold": "The Gold Price Prediction model uses Random Forest regression on multi-decade GLD, SPX, and SLV market metrics."
         };
 
-        function sendMessage() {
-            const text = userInput.value.trim();
-            if (!text) return;
-            userInput.value = '';
+        function send() {
+            const val = input.value.trim();
+            if (!val) return;
+            input.value = '';
 
-            // Append user msg
-            const uDiv = document.createElement('div');
-            uDiv.className = 'msg msg-user';
-            uDiv.textContent = text;
-            chatBox.appendChild(uDiv);
+            const u = document.createElement('div');
+            u.style.cssText = 'background: var(--primary); color: #fff; border-radius: var(--radius-md); padding: 12px 16px; font-size: 0.88rem; align-self: flex-end; max-width: 80%;';
+            u.textContent = val;
+            chatBox.appendChild(u);
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Simulate Agent Response
             setTimeout(() => {
-                const aiDiv = document.createElement('div');
-                aiDiv.className = 'msg msg-ai';
-                let reply = "I analyzed your query: \"" + text + "\". As an autonomous Gemini agent, I verify this matches the system parameters. ";
+                const ai = document.createElement('div');
+                ai.style.cssText = 'background: var(--subtle-bg); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; font-size: 0.88rem; line-height: 1.6; color: var(--text-title); align-self: flex-start; max-width: 85%;';
 
-                const lower = text.toLowerCase();
+                let reply = "Processed query: \"" + val + "\". ";
+                const lower = val.toLowerCase();
                 let matched = false;
-                for (let k in knowledgeBase) {
+                for (let k in repoDocs) {
                     if (lower.includes(k)) {
-                        reply += knowledgeBase[k] + " ";
+                        reply += repoDocs[k] + " ";
                         matched = true;
                     }
                 }
                 if (!matched) {
-                    reply += "My reasoning loop processed your prompt using the thinking budget protocol defined in gemini_test.py with streaming token verification.";
+                    reply += "Agent execution loop active with streaming token response enabled per gemini_test.py specification.";
                 }
-
-                aiDiv.innerHTML = reply;
-                chatBox.appendChild(aiDiv);
+                ai.innerHTML = reply;
+                chatBox.appendChild(ai);
                 chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
+            }, 500);
         }
     </script>
 </body>
